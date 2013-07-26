@@ -1,0 +1,2 @@
+serviceClass: conserveET.client.Proto
+path: 3D90CE83BDBA642838277E682908FF16.gwt.rpc

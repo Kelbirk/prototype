@@ -1,0 +1,3 @@
+# Module prototype
+# RPC service class, partial path of RPC policy file
+conserveET.client.Proto, 3D90CE83BDBA642838277E682908FF16.gwt.rpc
