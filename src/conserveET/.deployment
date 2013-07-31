@@ -1,0 +1,5 @@
+#Mon Jul 29 20:03:41 EDT 2013
+war.name=Prototype.war
+compiler.style=OBFUSCATED
+server.path=
+compiler.memory.max=256m

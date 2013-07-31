@@ -1,5 +1,10 @@
 package conserveET.client;
 
+import org.moxieapps.gwt.highcharts.client.Chart;
+import org.moxieapps.gwt.highcharts.client.Point;
+import org.moxieapps.gwt.highcharts.client.Series;
+import org.moxieapps.gwt.highcharts.client.plotOptions.PiePlotOptions;
+
 import conserveET.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -35,11 +40,18 @@ import com.google.gwt.visualization.client.visualizations.PieChart.Options;
 public class Prototype implements EntryPoint {
 	
 	private HorizontalPanel buttonPanel = new HorizontalPanel();
-
+	private VerticalPanel rankPanel = new VerticalPanel();
 	private Button energyButton = new Button("Energy");	
 	private Button avatarButton = new Button("Avatar");
+	private Button menuButton = new Button("Menu");
 	private Button rankButton = new Button("Rank");
+	private Button rank1 = new Button("Marsha Little");
+	private Button rank2 = new Button("Charles Guiteau");
+	private Button rank3 = new Button("Roscoe Conkling");
 	private TextBox rank = new TextBox();
+	
+	
+	Chart pieChart = new Chart();
 
 	/**
 	 * Create a remote service proxy to talk to the server-side service.
@@ -56,29 +68,50 @@ public class Prototype implements EntryPoint {
 		RootPanel.get("ConserveET");
 		rank.setText("24th");
 		buttonPanel.add(energyButton);
-		buttonPanel.add(avatarButton);
-		buttonPanel.add(rankButton);
 		
-	    Runnable onLoadCallback = new Runnable() {
-	        public void run() {
-	   
-	          // Create a pie chart visualization.
-	          PieChart pie = new PieChart(createTable(), createOptions());
-
-	          pie.addSelectHandler(createSelectHandler(pie));
-	          RootPanel.get("ConserveET").add(pie);
-	        }
-	      };
-
-	      VisualizationUtils.loadVisualizationApi(onLoadCallback, PieChart.PACKAGE);
-
-
+		pieChart.setType(Series.Type.PIE);
+		pieChart.setChartTitleText("Your household energy usage");
+		pieChart.setBorderWidth(50);
+		pieChart.setSize(400, 400);
+		Series pieSeries = pieChart.createSeries();
+		pieSeries.setName("Appliances");
+		pieSeries.setPoints(new Point[] {
+			new Point("Fridge", 25),
+			new Point("Microwave", 7),
+			new Point("AC", 50)
+		});
+		pieChart.addSeries(pieSeries);
+		RootPanel.get("ConserveET").add(pieChart);
+		
+	    // Listen for mouse events on the Energy button.
+	    energyButton.addClickHandler(new ClickHandler() {
+	      public void onClick(ClickEvent event) {
+	        energyClick();
+	      }
+	    });
+		buttonPanel.add(avatarButton);
+		avatarButton.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	  avatarClick();
+			    }
+			  });
+		buttonPanel.add(rankButton);
+		rankButton.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	  rankClick();
+			  	}
+			  });
+		menuButton.addClickHandler(new ClickHandler() {
+		      public void onClick(ClickEvent event) {
+		    	  menuClick();
+			    }
+		});
 
 		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("ConserveET").add(buttonPanel, 0, 126);
-		RootPanel.get("ConserveET").add(rank, 240, 56);
+		RootPanel.get("ConserveET").add(buttonPanel, 10, 436);
+		RootPanel.get("ConserveET").add(rank, 540, 138);
 		rank.setSize("66px", "16px");
-		buttonPanel.setSize("362px", "28px");
+		buttonPanel.setSize("777px", "28px");
 		
 		// We can set the id of a widget by accessing its Element
 		final Label textToServerLabel = new Label();
@@ -91,6 +124,42 @@ public class Prototype implements EntryPoint {
 		dialogVPanel.add(serverResponseLabel);
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 
+	}
+	
+	public void energyClick() {
+		RootPanel.get("ConserveET").clear();
+		RootPanel.get("ConserveET").add(menuButton, 500, 500);
+
+        Chart hourlyChart = new Chart()
+        .setType(Series.Type.SPLINE)
+        .setChartTitleText("Energy Usage")
+        .setMarginRight(10);
+        Series series = hourlyChart.createSeries()
+      		   .setName("kWh hourly usage")
+      		   .setPoints(new Number[] { 163, 203, 276, 408, 547, 729, 628 });
+      		hourlyChart.addSeries(series);
+      		RootPanel.get("ConserveET").add(hourlyChart);
+	}
+	public void avatarClick() {
+		RootPanel.get("ConserveET").clear();
+	}
+	public void rankClick() {
+		RootPanel.get("ConserveET").clear();
+		rankPanel.add(rank1);
+		rankPanel.add(rank2);
+		rankPanel.add(rank3);
+		RootPanel.get("ConserveET").add(rankPanel, 500, 0);
+		
+		
+		RootPanel.get("ConserveET").add(menuButton, 500, 500);
+		menuButton.setText("Menu");
+		
+
+	}
+	public void menuClick() {
+		RootPanel.get("ConserveET").clear();
+		RootPanel.get("ConserveET").add(pieChart);
+		RootPanel.get("ConserveET").add(buttonPanel);
 	}
 	
 	  private Options createOptions() {
